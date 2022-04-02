@@ -86,6 +86,11 @@ app.post("/addTree", async (req, res) => {
   res.status(200).json(tree);
 });
 
+app.get("/getCoords", async(req, res) => {
+  console.log('processing trees!')
+  coords = getCoords();
+  res.status(200).json(coords);
+});
 /*
  HELPER FUNCTIONS
  */
@@ -97,6 +102,21 @@ async function main() {
   } catch (e) {
     console.error(e);
   }
+}
+
+async function getCoords() {
+  var trees = db.collection("trees");
+  var coords
+
+  trees.find().forEach((tree) => {
+    coords["tree._id"] = tree.title
+  })
+
+  console.log(coords)
+}
+
+async function processTree(tree) {
+  console.log(tree);
 }
 
 // listening to application at http://localhost:3000/
