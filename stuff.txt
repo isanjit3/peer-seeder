@@ -1,0 +1,16 @@
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(success, error);
+                }
+                function success(position) {
+                    var coords = {
+                        lat: position.coords.latitude,
+                        long: position.coords.longitude
+                    }
+                    var latitude = position.coords.latitude
+                    var longitude = position.coords.longitude
+                    console.log(`latitude: ${latitude} longitude: ${longitude}`)
+                    console.log(coords)
+                }
+                function error() {
+                    alert("Can't detect your location. Try again later.")
+                }

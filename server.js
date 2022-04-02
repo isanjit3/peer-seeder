@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const { MongoClient } = require("mongodb");
 const uri = "mongodb+srv://peer-seeder-admin:CloudSystems1@peer-seeder.dinup.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri);
+const users = client.db("PeerSeedDB").collection("users");
+const trees = client.db("PeerSeedDB").collection("trees");
 const PORT = 3000 || process.env.PORT;
 
 /* APPLICATION CONFIG */
@@ -46,18 +48,17 @@ app.get("/add-tree", async (req, res) => {
 // USER CALLS
 // add new user to database
 app.post("/addUser", async (req, res) => {
-  pos = getUserPosition()
-
   user = {
     username: req.body.username,
     firstname: req.body.firstname,
     lastname: req.body.lastname,
-    latitude: pos[lat],
-    longitude: post[long],
-  }
+    latitude: req.body.latitude,
+    longitude: req.body.longitude,
+    timestamp: req.body.timestamp,
+  };
 
-  console.log(user)
-  res.status(200)
+  users.insertOne(user);
+  res.status(200).json(user);
 });
 
 // update existing user in database
@@ -84,24 +85,6 @@ async function main() {
     console.log("Sucessfully connected to MongoDB");
   } catch (e) {
     console.error(e);
-  } finally {
-    await client.close();
-  }
-}
-
-async function getUserPosition() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      coords = {
-        lat: position.coords.latitude,
-        long: position.coords.longitude
-      }
-      console.log(coords)
-      return coords;
-    }, 
-    (error) => {
-      console.log(error.message)
-    });
   }
 }
 
