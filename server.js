@@ -25,7 +25,8 @@ app.get("/", async (req, res) => {
 
 // friends page
 app.get("/friends", async (req, res) => {
-  res.render("friends");
+  const users = await db.collection("users").find();
+  res.render("friends", { users });
 });
 
 // friends page

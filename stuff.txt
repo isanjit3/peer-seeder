@@ -14,3 +14,5 @@
                 function error() {
                     alert("Can't detect your location. Try again later.")
                 }
+
+
