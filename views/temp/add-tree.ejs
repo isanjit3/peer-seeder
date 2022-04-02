@@ -1,37 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include('../partials/header') %>
 </head>
+
 <body>
     <%- include('../partials/nav') %>
-    
-    <div class="container container-fluid header-container">
-        <div class="row">
-            <div class="col-md-3"></div>
+
+        <div class="container container-fluid header-container">
+            <div class="row">
+                <div class="col-md-3"></div>
                 <div class="col-md-6">
                     <form class="row">
                         <div class="col-md-6">
-                            <label class="form-label"> First name </label>
-                            <input type="text" class="form-control" value="" id="firstname" placeholder="Firstname" />
+                            <label class="form-label"> Title </label>
+                            <input type="text" class="form-control" value="" id="title" placeholder="Title" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label"> Last name </label>
-                            <input type="text" class="form-control" value="" id="lastname" placeholder="Lastname" />
+                            <label class="form-label"> Place Name </label>
+                            <input type="text" class="form-control" value="" id="place-name" placeholder="Place Name" />
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <label class="form-label"> Description </label>
+                            <textarea type="text" class="form-control" value="" id="description" placeholder="Enter a description" rows="3"></textarea>
                         </div>
                         <div class="col-12 mt-3">
-                            <label class="form-label"> Username </label>
-                            <input type="text" class="form-control" value="" id="username" placeholder="Username" />
+                            <label class="form-label"> Submitted By </label>
+                            <input type="text" class="form-control" value="" id="submitted-by" placeholder="Submitted By" />
                         </div>
                         <div class="col-12 text-center">
-                            <button id="add-user" class="btn btn-primary mt-3 mb-3"> Submit </button>
+                            <button id="add-tree" class="btn btn-primary mt-3 mb-3"> Submit </button>
                         </div>
                     </form>
                 </div>
                 <div class="col-md-3"></div>
+            </div>
         </div>
-    </div>
-    
-    <%- include('../partials/footer') %>
+
+        <%- include('../partials/footer') %>
 </body>
+
+<script>
+    $(function () {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error);
+        }
+        function success(position) {
+            $('#add-tree').click(function () {
+                $.post('/addTree', {
+                    title: $('#title').val(),
+                    placeName: $('#place-name').val(),
+                    description: $('#description').val(),
+                    submittedBy: $('#submitted-by').val(),
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    timestamp: calculateTime(),
+                });
+            });
+
+            function calculateTime() {
+                var d = new Date();
+
+                var month = d.getMonth() + 1;
+                var day = d.getDate();
+
+                var output = (month < 10 ? '0' : '') + month + '/' +
+                    (day < 10 ? '0' : '') + day + '/' +
+                    d.getFullYear()
+
+                return output
+            }
+        }
+        function error() {
+            alert("Can't detect your location. Try again later.")
+        }
+    });
+</script>
+
 </html>

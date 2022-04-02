@@ -5,8 +5,7 @@ const bodyParser = require("body-parser");
 const { MongoClient } = require("mongodb");
 const uri = "mongodb+srv://peer-seeder-admin:CloudSystems1@peer-seeder.dinup.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri);
-const users = client.db("PeerSeedDB").collection("users");
-const trees = client.db("PeerSeedDB").collection("trees");
+const db = client.db("PeerSeederDB");
 const PORT = 3000 || process.env.PORT;
 
 /* APPLICATION CONFIG */
@@ -52,12 +51,13 @@ app.post("/addUser", async (req, res) => {
     username: req.body.username,
     firstname: req.body.firstname,
     lastname: req.body.lastname,
+    numTrees: req.body.numTrees,
     latitude: req.body.latitude,
     longitude: req.body.longitude,
     timestamp: req.body.timestamp,
   };
 
-  users.insertOne(user);
+  db.collection("users").insertOne(user);
   res.status(200).json(user);
 });
 
@@ -72,7 +72,18 @@ app.delete("/deleteUser", async (req, res) => {
 
 // TREE CALLS
 app.post("/addTree", async (req, res) => {
-  res.status(200);
+  tree = {
+    title: req.body.title,
+    placeName: req.body.placeName,
+    description: req.body.description,
+    submittedBy: req.body.submittedBy,
+    latitude: req.body.latitude,
+    longitude: req.body.longitude,
+    timestamp: req.body.timestamp,
+  };
+
+  db.collection("trees").insertOne(tree);
+  res.status(200).json(tree);
 });
 
 /*
