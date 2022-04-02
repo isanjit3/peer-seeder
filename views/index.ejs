@@ -22,7 +22,7 @@
 <script>
     $(function() {
         $('#process-trees').click(function() {
-            $.get('/getCoords', function(coords) {
+            $.get('/updateMap', function(coords) {
                 console.log(coords);
             });
         });

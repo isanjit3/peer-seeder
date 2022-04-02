@@ -89,9 +89,10 @@ app.post("/addTree", async (req, res) => {
   res.status(200).json(tree);
 });
 
-app.get("/getCoords", async(req, res) => {
+app.get("/updateMap", async(req, res) => {
+  console.log("Updating Map!")
   // add implementation to get the data in the correct format to send to MapBox GL
-  res.status(200).json(coords);
+  res.status(200);
 });
 
 /*
