@@ -12,21 +12,21 @@
             <div class="row">
                 <div class="col-md-3"></div>
                 <div class="col-md-6">
-                    <form action="/addUser" method="POST" class="row">
+                    <form class="row">
                         <div class="col-md-6">
                             <label class="form-label"> First name </label>
-                            <input type="text" class="form-control" value="" name="firstname" placeholder="Firstname" />
+                            <input type="text" class="form-control" value="" id="firstname" placeholder="Firstname" />
                         </div>
                         <div class="col-md-6">
                             <label class="form-label"> Last name </label>
-                            <input type="text" class="form-control" value="" name="lastname" placeholder="Lastname" />
+                            <input type="text" class="form-control" value="" id="lastname" placeholder="Lastname" />
                         </div>
                         <div class="col-12 mt-3">
                             <label class="form-label"> Username </label>
-                            <input type="text" class="form-control" value="" name="username" placeholder="Username" />
+                            <input type="text" class="form-control" value="" id="username" placeholder="Username" />
                         </div>
                         <div class="col-12 text-center">
-                            <button type="submit" id="add-user" class="btn btn-primary mt-3 mb-3"> Submit </button>
+                            <button id="add-user" class="btn btn-primary mt-3 mb-3"> Submit </button>
                         </div>
                     </form>
                 </div>
@@ -35,6 +35,46 @@
         </div>
 
         <%- include('../partials/footer') %>
+
+        <script>
+            $(function () {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(success, error);
+                }
+                function success(position) {
+                    console.log('ready to add user')
+                    console.log(position.coords.latitude, position.coords.longitude)
+                    console.log(calculateTime())
+                    
+                    $('#add-user').click(function () {
+                        $.post('/addUser', {
+                            username: $('#username').val(),
+                            firstname: $('#firstname').val(),
+                            lastname: $('#lastname').val(),
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            timestamp: calculateTime(),
+                        });
+                    });
+
+                    function calculateTime() {
+                        var d = new Date();
+
+                        var month = d.getMonth() + 1;
+                        var day = d.getDate();
+
+                        var output = (month < 10 ? '0' : '') + month + '/' + 
+                            (day < 10 ? '0' : '') + day + '/' + 
+                            d.getFullYear()
+
+                        return output
+                    }
+                }
+                function error() {
+                    alert("Can't detect your location. Try again later.")
+                }
+            });
+        </script>
 </body>
 
 </html>
