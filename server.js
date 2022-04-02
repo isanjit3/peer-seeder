@@ -2,6 +2,9 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const bodyParser = require("body-parser");
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const uri = "mongodb+srv://peer-seeder-admin:CloudSystems1@peer-seeder.dinup.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const client = new MongoClient(uri);
 const PORT = 3000 || process.env.PORT;
 
 /* APPLICATION CONFIG */
@@ -50,8 +53,19 @@ app.delete("/deleteUser", async (req, res) => {
  HELPER FUNCTIONS
  */
 // connect to mongodb
+async function main() {
+  try {
+    await client.connect();
+    console.log("Sucessfully connected to MongoDB");
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client.close();
+  }
+}
 
 // listening to application at http://localhost:3000/
 app.listen(PORT, () => {
-  console.log(`Hackathon Template listening at port: ${PORT}`);
+  main().catch(console.error);
+  console.log(`Peer Seeder Application listening at port: ${PORT}`);
 });
