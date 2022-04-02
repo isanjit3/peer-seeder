@@ -82,15 +82,18 @@ app.post("/addTree", async (req, res) => {
     timestamp: req.body.timestamp,
   };
 
+  processedTree = processTree(req.body);
+
   db.collection("trees").insertOne(tree);
+  db.collection("coordinates").insertOne(processedTree);
   res.status(200).json(tree);
 });
 
 app.get("/getCoords", async(req, res) => {
-  console.log('processing trees!')
-  coords = getCoords();
+  // add implementation to get the data in the correct format to send to MapBox GL
   res.status(200).json(coords);
 });
+
 /*
  HELPER FUNCTIONS
  */
@@ -104,19 +107,25 @@ async function main() {
   }
 }
 
+/*
 async function getCoords() {
   var trees = db.collection("trees");
-  var coords
+  coords = {}
 
   trees.find().forEach((tree) => {
-    coords["tree._id"] = tree.title
+    console.log(processTree(tree))
   })
-
-  console.log(coords)
 }
+*/
 
-async function processTree(tree) {
-  console.log(tree);
+function processTree(tree) {
+  const processedTree = {}
+  
+  processedTree.latitude = tree.latitude
+  processedTree.longitude = tree.longitude
+  processedTree.xy = [tree.latitude, tree.longitude]
+
+  return processedTree;
 }
 
 // listening to application at http://localhost:3000/
