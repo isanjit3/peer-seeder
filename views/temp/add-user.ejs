@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/header') %>
+</head>
+
+<body>
+    <%- include('../partials/nav') %>
+
+        <div class="container container-fluid header-container">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <form action="/addUser" method="POST" class="row">
+                        <div class="col-md-6">
+                            <label class="form-label"> First name </label>
+                            <input type="text" class="form-control" value="" name="firstname" placeholder="Firstname" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"> Last name </label>
+                            <input type="text" class="form-control" value="" name="lastname" placeholder="Lastname" />
+                        </div>
+                        <div class="col-12 mt-3">
+                            <label class="form-label"> Username </label>
+                            <input type="text" class="form-control" value="" name="username" placeholder="Username" />
+                        </div>
+                        <div class="col-12 text-center">
+                            <button type="submit" id="add-user" class="btn btn-primary mt-3 mb-3"> Submit </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+
+        <%- include('../partials/footer') %>
+</body>
+
+</html>
