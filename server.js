@@ -3,7 +3,8 @@ const dotenv = require("dotenv");
 const path = require("path");
 const app = express();
 const bodyParser = require("body-parser");
-const { uri } = require("./config");
+// const { uri } = require("./config"); # NEED TO FIX
+const uri = "mongodb+srv://peer-seeder-admin:CloudSystems1@peer-seeder.dinup.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const { MongoClient } = require("mongodb");
 const client = new MongoClient(uri);
 const db = client.db("PeerSeederDB");
@@ -13,13 +14,6 @@ const PORT = 3000 || process.env.PORT;
 // setting view engine to ejs
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
-
-// dotenv
-dotenv.config();
-module.exports = {
-  mongo_uri: process.env.MONGO_URI,
-  mapbox_accessToken: process.env.MAPBOX_ACCESS_TOKEN,
-};
 
 // body-parser
 app.use(bodyParser.json());
