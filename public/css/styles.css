@@ -39,3 +39,6 @@ u {
 input, textarea {
     background-color: white !important;
 }
+table {
+    color: whitesmoke !important;
+}

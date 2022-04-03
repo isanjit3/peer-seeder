@@ -39,11 +39,6 @@ app.get("/friends", async (req, res) => {
   res.render("friends", { users });
 });
 
-// friends page
-app.get("/profile", async (req, res) => {
-  res.render("profile");
-});
-
 app.get("/add-user", async (req, res) => {
   res.render("temp/add-user");
 });
