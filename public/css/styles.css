@@ -1,11 +1,13 @@
 /* Class Styles */
-.header-container {
-    margin-top: 2rem;
+.peer {
+    color: whitesmoke;
 }
-
+.seeder {
+    color: #7CFC00;
+}
 /* Mapbox Style */
 #map {
-    min-height: 30em;
+    min-height: 40em;
     height: auto;
 }
 .marker {
@@ -27,4 +29,13 @@
 /* Html Styles */
 body {
     padding: 1em;
+}
+.subtitle, h1, h4 {
+    color: whitesmoke;
+}
+u {
+    color: lightgreen
+}
+input, textarea {
+    background-color: white !important;
 }

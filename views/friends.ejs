@@ -7,38 +7,102 @@
 
 <body>
     <%- include('partials/nav') %>
-
-        <div class="container container-fluid header-container">
-            <div class="row">
+        <div class="container-fluid">
+            <div class="row mt-3">
                 <div class="col-md-12 text-center">
-                    <h1>Friends</h1>
+                    <h1 class="heading">Friends</h1>
                 </div>
-                <div class="row">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Username</th>
-                                <th scope="col"># of trees</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% users.forEach((user) => { %>
-                                <tr>
-                                    <td>
-                                        <%= user.username %>
-                                    </td>
-                                    <td>
-                                        <%= user.numTrees %>
-                                    </td>
-                                </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addFriend">
+                        Add Friend
+                    </button>
+                </div>
+                <div class="modal fade" id="addFriend" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add Friend</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label"> First name </label>
+                                        <input type="text" class="form-control" value="" id="firstname" placeholder="Firstname" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label"> Last name </label>
+                                        <input type="text" class="form-control" value="" id="lastname" placeholder="Lastname" />
+                                    </div>
+                                    <div class="col-md-12 mt-3">
+                                        <label class="form-label"> Username </label>
+                                        <input type="text" class="form-control" value="" id="username" placeholder="Username" />
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4 mt-3 text-center">
+                                        <label class="form-label"> # of trees planted </label>
+                                        <input type="number" class="form-control" value="" id="num-trees"
+                                            placeholder="#" />
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                    <div class="col-12 text-center">
+                                        <button id="add-user" class="btn btn-primary mt-3 mb-3"> Submit </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <%- include('partials/footer') %>
+
+            <script>
+                $(function () {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(success, error);
+                    }
+                    function success(position) {
+                        console.log('ready to add user')
+                        console.log(position.coords.latitude, position.coords.longitude)
+                        console.log(calculateTime())
+
+                        $('#add-user').click(function () {
+                            $.post('/addUser', {
+                                username: $('#username').val(),
+                                firstname: $('#firstname').val(),
+                                lastname: $('#lastname').val(),
+                                numTrees: $('#num-trees').val(),
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude,
+                                timestamp: calculateTime(),
+                            });
+                        });
+
+                        function calculateTime() {
+                            var d = new Date();
+
+                            var month = d.getMonth() + 1;
+                            var day = d.getDate();
+
+                            var output = (month < 10 ? '0' : '') + month + '/' +
+                                (day < 10 ? '0' : '') + day + '/' +
+                                d.getFullYear()
+
+                            return output
+                        }
+                    }
+                    function error() {
+                        alert("Can't detect your location. Try again later.")
+                    }
+                });
+            </script>
 </body>
 
 </html>

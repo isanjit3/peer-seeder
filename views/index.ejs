@@ -8,16 +8,69 @@
 <body>
     <%- include('partials/nav') %>
 
-        <div class="container container-fluid header-container">
-            <div class="row text-center">
-                <div class="col-md-12">
-                    <h1>PeerSeeder</h1>
+        <div class="container-fluid">
+            <div class="row mt-3">
+                <div class="col-md-12 text-center">
+                    <h1><span class="peer">Peer</span><span class="seeder">Seeder</span></h1>
                 </div>
-                <div class="col">
-                    <button id="process-trees" class="btn btn-success mt-3 mb-3"> Process Trees </button>
+                <div class="col-m-12 text-center">
+                    <h3 class="subtitle">An innovative approach to a more sustainable future.</h3>
                 </div>
             </div>
-            <div class="rounded" id="map"></div>
+            <div class="row mt-3">
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4 text-center">
+                        <h4>Trees around: <u>Georgia Tech University</u></h4>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#addTree">
+                            Add Tree
+                        </button>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="rounded" id="map"></div>
+                </div>
+                <div class="modal fade" id="addTree" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add Tree</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label"> Title </label>
+                                        <input type="text" class="form-control" value="" id="title" placeholder="Title" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label"> Place Name </label>
+                                        <input type="text" class="form-control" value="" id="place-name" placeholder="Place Name" />
+                                    </div>
+                                    <div class="col-md-12 mt-3">
+                                        <label class="form-label"> Description </label>
+                                        <textarea type="text" class="form-control" value="" id="description" placeholder="Enter a description" rows="3"></textarea>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label class="form-label"> Submitted By </label>
+                                        <input type="text" class="form-control" value="" id="submitted-by" placeholder="Submitted By" />
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <button id="add-tree" class="btn btn-primary mt-3 mb-3"> Submit </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <script>
@@ -30,6 +83,40 @@
                 });
             });
 
+            $(function () {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(success, error);
+                }
+                function success(position) {
+                    $('#add-tree').click(function () {
+                        $.post('/addTree', {
+                            title: $('#title').val(),
+                            placeName: $('#place-name').val(),
+                            description: $('#description').val(),
+                            submittedBy: $('#submitted-by').val(),
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            timestamp: calculateTime(),
+                        });
+                    });
+
+                    function calculateTime() {
+                        var d = new Date();
+
+                        var month = d.getMonth() + 1;
+                        var day = d.getDate();
+
+                        var output = (month < 10 ? '0' : '') + month + '/' +
+                            (day < 10 ? '0' : '') + day + '/' +
+                            d.getFullYear()
+
+                        return output
+                    }
+                }
+                function error() {
+                    alert("Can't detect your location. Try again later.")
+                }
+            });
             // generate map
             mapboxgl.accessToken = 'pk.eyJ1IjoiaXNhbmppdDMiLCJhIjoiY2wxZjdwaGhyMHJndDNjbXU5dGs4MDNhOCJ9.1slomz7Snm2sehKphFK75g';
 
@@ -38,18 +125,16 @@
                 type: 'FeatureCollection',
                 features: [
                     {
-                        type: 'Feature',
                         geometry: {
                             type: 'Point',
                             coordinates: [-84.39496, 33.77802]
                         },
                         properties: {
-                            title: 'Mapbox',
-                            description: 'Washington, D.C.'
+                            title: 'Georgia Tech',
+                            description: 'Beautiful Tree outside of Klaus'
                         }
                     },
                     {
-                        type: 'Feature',
                         geometry: {
                             type: 'Point',
                             coordinates: [-84.4, 33.8]

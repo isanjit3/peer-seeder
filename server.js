@@ -1,9 +1,10 @@
 const express = require("express");
+const dotenv = require("dotenv");
 const path = require("path");
 const app = express();
 const bodyParser = require("body-parser");
+const { uri } = require("./config");
 const { MongoClient } = require("mongodb");
-const uri = "mongodb+srv://peer-seeder-admin:CloudSystems1@peer-seeder.dinup.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri);
 const db = client.db("PeerSeederDB");
 const PORT = 3000 || process.env.PORT;
@@ -13,6 +14,13 @@ const PORT = 3000 || process.env.PORT;
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 
+// dotenv
+dotenv.config();
+module.exports = {
+  mongo_uri: process.env.MONGO_URI,
+  mapbox_accessToken: process.env.MAPBOX_ACCESS_TOKEN,
+};
+
 // body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,12 +28,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 /* ROUTES */
 // index page
 app.get("/", async (req, res) => {
-  res.render("index");
+  const { mapbox_accessToken } = require("./config");
+  res.render("index", { mapbox_accessToken });
 });
 
 // friends page
 app.get("/friends", async (req, res) => {
-  const users = await db.collection("users").find();
+  const users = await db.collection("users").find()
+
   res.render("friends", { users });
 });
 
@@ -90,6 +100,10 @@ app.post("/addTree", async (req, res) => {
   res.status(200).json(tree);
 });
 
+app.get("/generateMap", async (req, res) => {
+
+});
+
 app.get("/updateMap", async(req, res) => {
   console.log("Updating Map!")
   // add implementation to get the data in the correct format to send to MapBox GL
@@ -108,17 +122,6 @@ async function main() {
     console.error(e);
   }
 }
-
-/*
-async function getCoords() {
-  var trees = db.collection("trees");
-  coords = {}
-
-  trees.find().forEach((tree) => {
-    console.log(processTree(tree))
-  })
-}
-*/
 
 function processTree(tree) {
   const processedTree = {}
